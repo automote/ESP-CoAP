@@ -5,7 +5,6 @@
 #include <Arduino.h>
 #include <WiFiUdp.h>
 
-
 //current coap attributes
 #define COAP_DEFAULT_PORT 5683
 #define COAP_VERSION 1
