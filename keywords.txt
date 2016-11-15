@@ -6,17 +6,34 @@
 # Datatypes (KEYWORD1)
 #######################################
 
-CoAPSimpleLibrary	KEYWORD1
+WiFiUDP 	KEYWORD1
+CoapUri		KEYWORD1
+CoapResource 	KEYWORD1
+Coap		KEYWORD1
+CoapPacket 	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)
 #######################################
 
-sendResponse 	KEYWORD2
-get 	KEYWORD2
-put 	KEYWORD2
+bufferToPacket 	KEYWORD2
+parseOption	KEYWORD2
+version_  	KEYWORD2
+type_		KEYWORD2
+tokenlen_	KEYWORD2	
+code_		KEYWORD2
+messageid_	KEYWORD2
+token_		KEYWORD2
 response 	KEYWORD2
-loop 	KEYWORD2
+add		KEYWORD2
+find		KEYWORD2
+loop 		KEYWORD2
+start		KEYWORD2
+server		KEYWORD2
+sendPacket	KEYWORD2
+resourceDiscovery	KEYWORD2
+sendResponse	KEYWORD2
+
 
 #######################################
 # Constants (LITERAL1)
