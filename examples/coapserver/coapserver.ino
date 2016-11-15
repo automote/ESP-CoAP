@@ -80,7 +80,7 @@ void setup() {
   //      coap.server(callback_env, "env/humidity");
  
   coap.server(callback_light, "light");
-  coap.server(callback_lightled, "lightled");
+  
 
 
   // start coap server/client

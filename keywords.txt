@@ -9,8 +9,8 @@
 WiFiUDP 	KEYWORD1
 CoapUri		KEYWORD1
 CoapResource 	KEYWORD1
-CoapPacket 	KEYWORD1
 Coap		KEYWORD1
+CoapPacket 	KEYWORD1
 
 #######################################
 # Methods and Functions (KEYWORD2)

@@ -20,6 +20,6 @@ Download this source code branch zip file and extract to the Arduino libraries d
     # restart Arduino IDE, you can find ESP-CoAP examples.
 
 -Upload the example code to ESP-12E,get the IPaddress of ESP-12E(server).
--Run the coap client with following URI coap://IPaddress:default port number/resource ,to connect to ESP_12E server
+-Run the coap client with following URI coap://IPaddress:default port number/resource ,to connect to ESP_12E server.
 
 For more information about this library please vist <a href="https://github.com/automote/ESP-CoAP">here</a>.

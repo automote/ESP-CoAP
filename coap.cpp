@@ -196,7 +196,7 @@ bool Coap::loop() {
 			}
 			else if (request->type_()==COAP_NONCON){
 				response->version=request->version;
-				response->type=COAP_ACK;
+				response->type=COAP_NONCON;
 				response->tokenlen=request->tokenlen;
 				response->messageid=request->messageid;
 				response->token=request->token;
