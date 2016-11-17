@@ -15,7 +15,7 @@
 #define MAX_OPTION_NUM 10
 #define BUF_MAX_SIZE 100
 #define MAX_CALLBACK 10
-
+#define MAX_AGE_DEFAULT 60
 
 #define COAP_OPTION_DELTA(v, n) (v < 13 ? (*n = (0xFF & v)) : (v <= 0xFF + 13 ? (*n = 13) : (*n = 14)))
 
@@ -79,8 +79,10 @@ typedef enum {
 	COAP_URI_QUERY = 15,
 	COAP_ACCEPT = 17,
 	COAP_LOCATION_QUERY = 20,
+	COAP_BLOCK_2=23,
 	COAP_PROXY_URI = 35,
 	COAP_PROXY_SCHEME = 39
+	
 } COAP_OPTION_NUMBER;
 
 //coap content format types

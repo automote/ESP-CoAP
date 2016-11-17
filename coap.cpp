@@ -48,6 +48,9 @@ void CoapUri::add(callback call, String url,CoapResource resource[]) {
 
 }
 
+
+
+
 //finding request url(resource)
 callback CoapUri::find(String url) {
 	for (int i = 0; i < MAX_CALLBACK; i++) if (c[i] != NULL && u[i].equals(url)) return c[i];
@@ -184,7 +187,7 @@ bool Coap::loop() {
 
 
 		}
-		else if(request->code_()==COAP_GET){
+		else if(request->code_()==COAP_GET||request->code_()==COAP_PUT||request->code_()==COAP_POST||request->code_()==COAP_DELETE){
 
 			if(request->type_()== COAP_CON){
 
@@ -202,37 +205,98 @@ bool Coap::loop() {
 				response->token=request->token;
 			}
 
+			if(request->code_()==COAP_GET){
+				if(url==String(".well-known/core")){
 
-			if(url==String(".well-known/core")){
+					resourceDiscovery(response,udp.remoteIP(),udp.remotePort(),resource);
 
-				resourceDiscovery(response,udp.remoteIP(),udp.remotePort(),resource);
-
-			}else if(!uri.find(url)){
-				response->payload=NULL;
-				response->payloadlen=0;
-				response->code=COAP_NOT_FOUND;
+				}else if(!uri.find(url)){
+					response->payload=NULL;
+					response->payloadlen=0;
+					response->code=COAP_NOT_FOUND;
 
 
-				response->optionnum=0;
+					response->optionnum=0;
 
-				char optionBuffer[2];
-				optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN  & 0xFF00) >> 8;
-				optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN  & 0x00FF) ;
-				response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;
-				response->options[response->optionnum].length = 2;
-				response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
-				response->optionnum++;
+					char optionBuffer[2];
+					optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN  & 0xFF00) >> 8;
+					optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN  & 0x00FF) ;
+					response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;
+					response->options[response->optionnum].length = 2;
+					response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
+					response->optionnum++;
 
-				sendPacket(response,udp.remoteIP(),udp.remotePort());	
+					sendPacket(response,udp.remoteIP(),udp.remotePort());	
 
-			}else
-			{
+				}else{
 
-				uri.find(url)(response,udp.remoteIP(),udp.remotePort());
+					uri.find(url)(request,udp.remoteIP(),udp.remotePort());
+				}
 
-			}
+			}else if(request->code_()==COAP_PUT){
+			
+				if(!uri.find(url)){
+					response->payload=NULL;
+					response->payloadlen=0;
+					response->code=COAP_NOT_FOUND;
 
-		}
+
+					response->optionnum=0;
+
+					char optionBuffer[2];
+					optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN  & 0xFF00) >> 8;
+					optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN  & 0x00FF) ;
+					response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;
+					response->options[response->optionnum].length = 2;
+					response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
+					response->optionnum++;
+
+					sendPacket(response,udp.remoteIP(),udp.remotePort());	
+
+				}else
+					uri.find(url)(request,udp.remoteIP(),udp.remotePort());
+
+			}else if(request->code==COAP_POST){
+
+				int i;
+				for( i=0;i<rcount;i++){
+					if(resource[i].rt==url){
+						uri.find(url)(request,udp.remoteIP(),udp.remotePort());
+						break;
+					}
+				}
+				if(i==rcount){
+					//add new resource
+				
+				}
+
+			}else if(request->code==COAP_DELETE){
+
+
+
+				if(!uri.find(url)){
+					response->payload=NULL;
+					response->payloadlen=0;
+					response->code=COAP_NOT_FOUND;
+
+
+					response->optionnum=0;
+
+					char optionBuffer[2];
+					optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN  & 0xFF00) >> 8;
+					optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN  & 0x00FF) ;
+					response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;
+					response->options[response->optionnum].length = 2;
+					response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
+					response->optionnum++;
+
+					sendPacket(response,udp.remoteIP(),udp.remotePort());	
+
+				}else{//delete
+				}
+
+}
+}
 
 	}
 }
@@ -394,6 +458,9 @@ void Coap::resourceDiscovery(CoapPacket *response,IPAddress ip, int port,CoapRes
 
 	response->optionnum=0;
 	char optionBuffer[2];
+	char optionBuffer_1[2];
+	
+
 	optionBuffer[0] = ((uint16_t)COAP_APPLICATION_LINK_FORMAT & 0xFF00) >> 8;
 	optionBuffer[1] = ((uint16_t)COAP_APPLICATION_LINK_FORMAT & 0x00FF) ;
 
@@ -401,7 +468,16 @@ void Coap::resourceDiscovery(CoapPacket *response,IPAddress ip, int port,CoapRes
 	response->options[response->optionnum].length = 2;
 	response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
 	response->optionnum++;
+	
+	optionBuffer_1[0] = ((uint16_t)MAX_AGE_DEFAULT & 0xFF00) >> 8;
+	optionBuffer_1[1] = ((uint16_t)MAX_AGE_DEFAULT & 0x00FF) ;
 
+	response->options[response->optionnum].buffer = (uint8_t *)optionBuffer_1;
+	response->options[response->optionnum].length = 2;
+	response->options[response->optionnum].number =COAP_MAX_AGE ;
+	response->optionnum++;
+
+	
 	response->code=COAP_CONTENT ;
 	response->payload=(uint8_t *)payload;
 	response->payloadlen=strlen(payload);
@@ -413,23 +489,68 @@ void Coap::resourceDiscovery(CoapPacket *response,IPAddress ip, int port,CoapRes
 
 void Coap::sendResponse(CoapPacket *packet, IPAddress ip, int port, char *payload) {
 
-
+	if(request->code_()==COAP_GET){
 	response->code = COAP_CONTENT;
 	response->payload = (uint8_t *)payload;
 	response->payloadlen = strlen(payload);
 	response->optionnum = 0;
 	char optionBuffer[2];
-	optionBuffer[0] = ((uint16_t)COAP_APPLICATION_LINK_FORMAT & 0xFF00) >> 8;
-	optionBuffer[1] = ((uint16_t)COAP_APPLICATION_LINK_FORMAT& 0x00FF) ;
+	optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN & 0xFF00) >> 8;
+	optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN & 0x00FF) ;
 	response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;		
 	response->options[response->optionnum].length = 2;
 	response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
 	response->optionnum++;
 
 	sendPacket(response, ip, port);
+	}else if(request->code_()==COAP_PUT){
+	String str="PUT OK";
+	const char *payload=str.c_str();
+	response->code = COAP_CHANGED;
+	response->payload=(uint8_t *)payload;
+	response->payloadlen = strlen(payload);
+	response->optionnum = 0;
+	char optionBuffer[2];
+	optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN & 0xFF00) >> 8;
+	optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN & 0x00FF) ;
+	response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;		
+	response->options[response->optionnum].length = 2;
+	response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
+	response->optionnum++;
+
+sendPacket(response, ip, port);
+
+}else if(request->code_()==COAP_POST){
+	String str="Post changed";
+	const char *payload=str.c_str();
+	response->code = COAP_CHANGED;
+	response->payload=(uint8_t *)payload;
+	response->payloadlen = strlen(payload);
+	response->optionnum = 0;
+	char optionBuffer[2];
+	optionBuffer[0] = ((uint16_t)COAP_TEXT_PLAIN & 0xFF00) >> 8;
+	optionBuffer[1] = ((uint16_t)COAP_TEXT_PLAIN & 0x00FF) ;
+	response->options[response->optionnum].buffer = (uint8_t *)optionBuffer;		
+	response->options[response->optionnum].length = 2;
+	response->options[response->optionnum].number = COAP_CONTENT_FORMAT;
+	response->optionnum++;
+
+sendPacket(response, ip, port);
+
+}
+
+
 
 
 }
+
+/*void Coap::callback_new(CoapPacket *packet, IPAddress ip, int port){
+
+
+}
+*/
+
+
 
 
 
