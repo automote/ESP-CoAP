@@ -1,10 +1,8 @@
-
 #ifndef __SIMPLE_COAP_H__
 #define __SIMPLE_COAP_H__
 
 #include <Arduino.h>
 #include <WiFiUdp.h>
-
 
 //current coap attributes
 #define COAP_DEFAULT_PORT 5683
@@ -13,13 +11,14 @@
 #define COAP_OPTION_HEADER_SIZE 1
 #define COAP_PAYLOAD_MARKER 0xFF
 
+//configuration
 #define MAX_OPTION_NUM 10
-#define BUF_MAX_SIZE 100
+#define BUF_MAX_SIZE 250
 #define MAX_CALLBACK 10
-
+#define MAX_AGE_DEFAULT 60
+#define MAX_OBSERVER 10
 
 #define COAP_OPTION_DELTA(v, n) (v < 13 ? (*n = (0xFF & v)) : (v <= 0xFF + 13 ? (*n = 13) : (*n = 14)))
-
 
 //coap message types
 typedef enum {
@@ -36,12 +35,10 @@ typedef enum {
 	COAP_POST = 2,
 	COAP_PUT = 3,
 	COAP_DELETE = 4,
-
 } COAP_METHOD;
 
 //coap response values
 typedef enum {
-	
 	COAP_EMPTY_MESSAGE=0,
 	COAP_CREATED =65,
 	COAP_DELETED = 66,
@@ -63,7 +60,6 @@ typedef enum {
 	COAP_SERVICE_UNAVALIABLE =163,
 	COAP_GATEWAY_TIMEOUT = 164,
 	COAP_PROXYING_NOT_SUPPORTED = 165
-
 } COAP_RESPONSE_CODE;
 
 //coap option values
@@ -80,8 +76,10 @@ typedef enum {
 	COAP_URI_QUERY = 15,
 	COAP_ACCEPT = 17,
 	COAP_LOCATION_QUERY = 20,
+	COAP_BLOCK_2=23,
 	COAP_PROXY_URI = 35,
-	COAP_PROXY_SCHEME = 39
+	COAP_PROXY_SCHEME = 39,
+	COAP_OBSERVE=6
 } COAP_OPTION_NUMBER;
 
 //coap content format types
@@ -95,11 +93,12 @@ typedef enum {
 	COAP_APPLICATION_JSON = 50
 } COAP_CONTENT_TYPE;
 
-//coap resource class
-class CoapResource {
+//coap class::used for resource discovery request
+class resource_dis {
 	public:
 		String rt;
 		uint8_t ct;
+		String title;
 };
 
 //coap option class
@@ -136,25 +135,33 @@ class CoapPacket {
 	       uint8_t * token_();
 };
 
-typedef void (*callback)(CoapPacket *, IPAddress, int);
+typedef void (*callback)(CoapPacket *, IPAddress, int,int);
 
 
 class CoapUri {
-	private:
+	public:
 		String u[MAX_CALLBACK];
 		callback c[MAX_CALLBACK];
-	public:
 
 		CoapUri();
-		void add(callback call, String url,CoapResource resource[]);
+		void add(callback call, String url,resource_dis resource[]);
 		callback find(String url);
+};
 
+//coap class::used for maintaining the details of clients making observe request 
+class CoapObserver{
+	public:
+		uint8_t* observer_token;
+		uint8_t observer_tokenlen;
+		IPAddress observer_clientip;
+		int observer_clientport;
+		String observer_url;
 };
 
 //coap class
-class Coap {
+class coapServer {
 	public:
-		Coap(
+		coapServer(
 
 		    );
 
@@ -165,11 +172,12 @@ class Coap {
 		bool loop();
 
 		uint16_t sendPacket(CoapPacket *packet, IPAddress ip, int port);
-		void resourceDiscovery(CoapPacket *packet,IPAddress ip, int port,CoapResource resource[]);
+		void resourceDiscovery(CoapPacket *packet,IPAddress ip, int port,resource_dis resource[]);
 
-		void sendResponse(CoapPacket *packet,IPAddress ip, int port, char *payload);
-
-
+		void sendResponse(IPAddress ip, int port, char *payload);
+		void addObserver(String url,CoapPacket *request,IPAddress ip,int port);
+		void sendResponse(char *payload);
+		void notification(char *payload);
 
 };
 
