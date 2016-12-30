@@ -155,7 +155,6 @@ int CoapPacket::parseOption(CoapOption *option, uint16_t *running_delta, uint8_t
 
 bool coapServer::loop() {
 
-
 	uint8_t buffer[BUF_MAX_SIZE];
 	int32_t packetlen = Udp.parsePacket();
 

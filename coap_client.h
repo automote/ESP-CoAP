@@ -6,8 +6,9 @@
 
 //current coap attributes
 #define COAP_DEFAULT_PORT 5683
-#define COAP_VERSION 1
 #define COAP_HEADER_SIZE 4
+#define COAP_VERSION 1
+
 
 //configuration
 #define MAX_OPTION_NUM 10

@@ -9,8 +9,8 @@ void callback_light(CoapPacket &packet, IPAddress ip, int port, int obs);
 coapServer coap;
 
 //WiFi connection info
-const char* ssid = "Poori";
-const char* password = "poorinagesh";
+const char* ssid = "******";
+const char* password = "******";
 
 // LED STATE
 bool LEDSTATE;
