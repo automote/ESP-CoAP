@@ -1,3 +1,6 @@
+/*
+ESP-COAP Client
+*/
 #include <ESP8266WiFi.h>
 #include "coap_client.h"
 
@@ -5,8 +8,8 @@
 coapClient coap;
 
 //WiFi connection info
-const char* ssid = "Poori";
-const char* password = "poorinagesh";
+const char* ssid = "******";
+const char* password = "*********";
 
 //ip address and default port of coap server in which your interested in
 IPAddress ip(129,132,15,80);//take ETH Zurich or coap.me server to run and check client 
@@ -22,6 +25,10 @@ void callback_response(coapPacket &packet, IPAddress ip, int port) {
     p[packet.payloadlen] = NULL;
 
     //response from coap server
+ if(packet.type==3 && packet.code==0){
+      Serial.println("ping ok");
+    }
+
     Serial.println(p);
 }
 
@@ -62,7 +69,7 @@ void setup() {
     //int msgid= coap.observe(ip,port,"light",0);
 
     //reset observe cancel
-    //int msgid=coap.observecancel(ip,port);
+    //int msgid=coap.observecancel(ip,port,"resoucename");
     
 }
 //int i=0;
@@ -102,7 +109,7 @@ void loop() {
       //if(i==3)
     //{
         //Serial.println("cancel observe");
-        //coap.observecancel(ip,port);
+        //coap.observeCancel(ip,port,"resourcename");
     //}
   
     //Serial.println(msgid);

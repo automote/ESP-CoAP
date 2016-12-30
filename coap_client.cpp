@@ -1,3 +1,13 @@
+/*
+This file is part of the ESP-COAP Client library for Arduino
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
+
+*/
+
 #include "coap_client.h"
 
 //creating instance for required class
@@ -36,6 +46,7 @@ uint16_t coapClient::delet(IPAddress ip, int port, char *url){
 
 }
 
+//ping
 uint16_t coapClient::ping(IPAddress ip,int port){
 	
 	send (ip,port,NULL,COAP_CON,COAP_EMPTY,NULL,0,NULL,0,0,NULL);
@@ -49,7 +60,7 @@ uint16_t coapClient::observe(IPAddress ip,int port,char *url,uint8_t optionbuffe
 
 }
 
-uint16_t coapClient::observecancel(IPAddress ip,int port,char *url){
+uint16_t coapClient::observeCancel(IPAddress ip,int port,char *url){
 	send(ip,port,url,COAP_RESET,COAP_EMPTY,NULL,0,NULL,0,NULL,0);
 
 }

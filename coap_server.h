@@ -1,3 +1,13 @@
+/*
+This file is part of the ESP-COAP Server library for Arduino
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
+
+*/
+
 #ifndef __SIMPLE_COAP_H__
 #define __SIMPLE_COAP_H__
 
@@ -102,7 +112,7 @@ class resource_dis {
 };
 
 //coap option class
-class CoapOption {
+class coapOption {
 	public:
 		uint8_t number;
 		uint8_t length;
@@ -110,7 +120,7 @@ class CoapOption {
 };
 
 //coap packet class
-class CoapPacket {
+class coapPacket {
 	public:uint8_t version;
 	       uint8_t type;
 	       uint8_t code;
@@ -120,12 +130,12 @@ class CoapPacket {
 	       uint8_t payloadlen;
 	       uint16_t messageid;
 	       uint8_t optionnum;
-	       CoapOption options[MAX_OPTION_NUM];
+	       coapOption options[MAX_OPTION_NUM];
 
 	       void bufferToPacket(uint8_t buffer[],int32_t packetlen);
 
-	       int parseOption(CoapOption *option, uint16_t *running_delta, uint8_t **buf, size_t buflen);
-	       CoapPacket();
+	       int parseOption(coapOption *option, uint16_t *running_delta, uint8_t **buf, size_t buflen);
+	       coapPacket();
 
 	       uint8_t version_();
 	       uint8_t type_();
@@ -135,21 +145,21 @@ class CoapPacket {
 	       uint8_t * token_();
 };
 
-typedef void (*callback)(CoapPacket *, IPAddress, int,int);
+typedef void (*callback)(coapPacket *, IPAddress, int,int);
 
 
-class CoapUri {
+class coapUri {
 	public:
 		String u[MAX_CALLBACK];
 		callback c[MAX_CALLBACK];
 
-		CoapUri();
+		coapUri();
 		void add(callback call, String url,resource_dis resource[]);
 		callback find(String url);
 };
 
 //coap class::used for maintaining the details of clients making observe request 
-class CoapObserver{
+class coapObserver{
 	public:
 		uint8_t* observer_token;
 		uint8_t observer_tokenlen;
@@ -171,11 +181,11 @@ class coapServer {
 		void server(callback c, String url);
 		bool loop();
 
-		uint16_t sendPacket(CoapPacket *packet, IPAddress ip, int port);
-		void resourceDiscovery(CoapPacket *packet,IPAddress ip, int port,resource_dis resource[]);
+		uint16_t sendPacket(coapPacket *packet, IPAddress ip, int port);
+		void resourceDiscovery(coapPacket *packet,IPAddress ip, int port,resource_dis resource[]);
 
 		void sendResponse(IPAddress ip, int port, char *payload);
-		void addObserver(String url,CoapPacket *request,IPAddress ip,int port);
+		void addObserver(String url,coapPacket *request,IPAddress ip,int port);
 		void sendResponse(char *payload);
 		void notification(char *payload);
 

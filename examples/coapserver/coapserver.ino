@@ -1,22 +1,25 @@
+/*
+ESP-COAP Server
+*/
 
 #include <ESP8266WiFi.h>
 #include <coap_server.h>
 
 
 // CoAP server endpoint url callback
-void callback_light(CoapPacket &packet, IPAddress ip, int port, int obs);
+void callback_light(coapPacket &packet, IPAddress ip, int port, int obs);
 
 coapServer coap;
 
 //WiFi connection info
-const char* ssid = "Poori";
-const char* password = "poorinagesh";
+const char* ssid = "*******";
+const char* password = "********";
 
 // LED STATE
 bool LEDSTATE;
 
 // CoAP server endpoint URL
-void callback_light(CoapPacket *packet, IPAddress ip, int port,int obs) {
+void callback_light(coapPacket *packet, IPAddress ip, int port,int obs) {
   Serial.println("light");
 
   // send response
@@ -49,7 +52,7 @@ void callback_light(CoapPacket *packet, IPAddress ip, int port,int obs) {
 
 
 
-void callback_lightled(CoapPacket *packet, IPAddress ip, int port,int obs) {
+void callback_lightled(coapPacket *packet, IPAddress ip, int port,int obs) {
   Serial.println("Lightled");
 
   // send response

@@ -1,14 +1,23 @@
+/*
+This file is part of the ESP-COAP Server library for Arduino
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3 of the License, or (at your option) any later version.
+
+*/
 
 #include "coap_server.h"
 
 //creating instance for required class
 WiFiUDP Udp;
 
-CoapUri uri;
+coapUri uri;
 resource_dis resource[MAX_CALLBACK];
-CoapPacket *request=new CoapPacket();
-CoapPacket *response=new CoapPacket();
-CoapObserver observer[MAX_OBSERVER];
+coapPacket *request=new coapPacket();
+coapPacket *response=new coapPacket();
+coapObserver observer[MAX_OBSERVER];
 
 //counter for maintaining resource count
 static uint8_t rcount=0;
@@ -23,7 +32,7 @@ char *previousPayload="";
 uint16_t messid=200;
 
 //constructor of coapuri class
-CoapUri::CoapUri() {
+coapUri::coapUri() {
 	for (int i = 0; i < MAX_CALLBACK; i++) {
 		u[i] = "";
 		c[i] = NULL;
@@ -31,7 +40,7 @@ CoapUri::CoapUri() {
 }
 
 //adding resources 
-void CoapUri::add(callback call, String url,resource_dis resource[]) {
+void coapUri::add(callback call, String url,resource_dis resource[]) {
 
 	for (int i = 0; i < MAX_CALLBACK; i++)
 		if (c[i] != NULL && u[i].equals(url)) {
@@ -57,7 +66,7 @@ void CoapUri::add(callback call, String url,resource_dis resource[]) {
 }
 
 //finding request url(resource)
-callback CoapUri::find(String url) {
+callback coapUri::find(String url) {
 	for (int i = 0; i < MAX_CALLBACK; i++) if (c[i] != NULL && u[i].equals(url)) return c[i];
 	return NULL;
 }
@@ -82,31 +91,31 @@ bool coapServer::start(int port) {
 }
 
 //constructor of coappacket class
-CoapPacket::CoapPacket(){
+coapPacket::coapPacket(){
 }
 
-uint8_t CoapPacket::version_(){
+uint8_t coapPacket::version_(){
 	return version;
 }
 
-uint8_t CoapPacket::type_(){
+uint8_t coapPacket::type_(){
 	return type;
 }
 
-uint8_t CoapPacket::code_(){
+uint8_t coapPacket::code_(){
 	return code;
 }
 
-uint16_t CoapPacket::messageid_(){
+uint16_t coapPacket::messageid_(){
 	return messageid;
 }
 
-uint8_t * CoapPacket::token_(){
+uint8_t * coapPacket::token_(){
 	return token;
 }
 
 //parse option
-int CoapPacket::parseOption(CoapOption *option, uint16_t *running_delta, uint8_t **buf, size_t buflen) {
+int coapPacket::parseOption(coapOption *option, uint16_t *running_delta, uint8_t **buf, size_t buflen) {
 
 	uint8_t *p = *buf;
 	uint8_t headlen = 1;
@@ -370,7 +379,7 @@ bool coapServer::loop() {
 
 }
 
-void CoapPacket::bufferToPacket(uint8_t buffer[],int32_t packetlen){
+void coapPacket::bufferToPacket(uint8_t buffer[],int32_t packetlen){
 
 	//parse coap packet header
 	version=(buffer[0] & 0xC0)>>6;
@@ -425,7 +434,7 @@ void CoapPacket::bufferToPacket(uint8_t buffer[],int32_t packetlen){
 
 }
 
-uint16_t coapServer::sendPacket(CoapPacket *packet, IPAddress ip, int port) {
+uint16_t coapServer::sendPacket(coapPacket *packet, IPAddress ip, int port) {
 
 	uint8_t buffer[BUF_MAX_SIZE];
 	uint8_t *p = buffer;
@@ -504,7 +513,7 @@ uint16_t coapServer::sendPacket(CoapPacket *packet, IPAddress ip, int port) {
 }
 
 //resource discovery
-void coapServer::resourceDiscovery(CoapPacket *response,IPAddress ip, int port,resource_dis resource[])
+void coapServer::resourceDiscovery(coapPacket *response,IPAddress ip, int port,resource_dis resource[])
 {
 
 	String str_res;
@@ -641,7 +650,7 @@ void coapServer::sendResponse( IPAddress ip, int port, char *payload) {
 }
 
 //add observer
-void coapServer::addObserver(String url,CoapPacket *request,IPAddress ip,int port){
+void coapServer::addObserver(String url,coapPacket *request,IPAddress ip,int port){
 
 	//uri.find(url)(request,Udp.remoteIP(),Udp.remotePort());
 	uri.find(url)(request,ip,port,0);
