@@ -96,8 +96,6 @@ uint16_t coapClient::send(IPAddress ip, int port, char *url, COAP_TYPE type, COA
 		packet.options[packet.optionnum].number = COAP_URI_PATH;
 		packet.optionnum++;
 	}
-
-
 	// send packet
 	sendPacket(packet, ip, port);
 }

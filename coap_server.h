@@ -171,9 +171,7 @@ class coapObserver{
 //coap class
 class coapServer {
 	public:
-		coapServer(
-
-		    );
+		coapServer( );
 
 		bool start();
 		bool start(int port);

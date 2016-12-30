@@ -49,9 +49,9 @@ You can buy the ESP-CoAP compatible modules from us by going to this URL <a href
       - PUT
       - POST (update working,creation not working)
       - DELETE (not working)
+   - Ping
    - Observe
    - Resource Discovery 
-   - Ping
    - Block Transfer (not working)
 
 - Client Side Working:

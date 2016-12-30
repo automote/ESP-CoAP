@@ -12,8 +12,13 @@ void callback_light(coapPacket &packet, IPAddress ip, int port, int obs);
 coapServer coap;
 
 //WiFi connection info
+<<<<<<< HEAD
 const char* ssid = "*******";
 const char* password = "********";
+=======
+const char* ssid = "******";
+const char* password = "******";
+>>>>>>> observe
 
 // LED STATE
 bool LEDSTATE;
