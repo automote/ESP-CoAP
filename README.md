@@ -63,4 +63,10 @@ You can buy the ESP-CoAP compatible modules from us by going to this URL <a href
    - Observe
    - Ping 
    
-  
+## Maintainers
+
+The ESP-CoAP is maintained by thingTronics Innovations.
+
+Main contributor:
+ * Poornima Nagesh @<poornima.nagesh@thingtronics.com>
+ * Lovelesh Patel @<lovelesh.patel@thingtronics.com>
