@@ -361,6 +361,7 @@ bool coapServer::loop() {
 				}
 
 			}
+			delete request->token;
 		}
 
 	}
