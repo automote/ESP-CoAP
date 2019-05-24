@@ -10,7 +10,7 @@ coapClient coap;
 //WiFi connection info
 const char* ssid = "******";
 const char* password = "*********";
-const char* password = "*******";
+
 
 //ip address and default port of coap server in which your interested in
 IPAddress ip(129,132,15,80);//take ETH Zurich or coap.me server to run and check client 
