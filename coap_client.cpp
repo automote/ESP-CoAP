@@ -200,7 +200,7 @@ bool coapClient::loop() {
 			packetlen = udp.parsePacket();
 			continue;
 		}
-
+        packet.payloadlen = 0;
 		packet.type = (buffer[0] & 0x30) >> 4;
 		packet.tokenlen = buffer[0] & 0x0F;
 		packet.code = buffer[1];
